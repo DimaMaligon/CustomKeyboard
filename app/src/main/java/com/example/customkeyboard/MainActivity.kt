@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.ResultReceiver
 import android.provider.Settings
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -63,9 +66,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    fun passData(view : KeyboardViewModel){
-    }
 }
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -106,7 +106,7 @@ fun Options() {
             onColorChanged = { colorEnvelope: ColorEnvelope ->
                 viewKeyboard.setColor(colorEnvelope.hexCode)
 
-                val intent = Intent(context, LifecycleInputMethodService::class.java)
+                val intent = Intent(context, IMEService::class.java)
                 intent.putExtra("ColorKey", viewKeyboard.color.value)
                 context.startService(intent)
             }

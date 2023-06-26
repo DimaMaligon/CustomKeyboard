@@ -9,7 +9,6 @@ import androidx.lifecycle.ServiceLifecycleDispatcher
 
 abstract class LifecycleInputMethodService : InputMethodService(), LifecycleOwner {
     protected val dispatcher = ServiceLifecycleDispatcher(this)
-    var colorIntent = "ff00b3"
 
     @CallSuper
     override fun onCreate() {
@@ -20,11 +19,6 @@ abstract class LifecycleInputMethodService : InputMethodService(), LifecycleOwne
     override fun onBindInput() {
         super.onBindInput()
         dispatcher.onServicePreSuperOnBind()
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        colorIntent = intent!!.getStringExtra("ColorKey").toString()
-        return super.onStartCommand(intent, flags, startId)
     }
 
     @CallSuper

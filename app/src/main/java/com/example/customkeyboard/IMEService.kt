@@ -1,7 +1,15 @@
 package com.example.customkeyboard
 
+import android.content.ContentValues.TAG
+import android.content.Intent
 import android.content.Intent.getIntent
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.ResultReceiver
+import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -17,11 +25,12 @@ import com.example.customkeyboard.viewmodel.KeyboardViewModel
 class IMEService : LifecycleInputMethodService(),
     ViewModelStoreOwner,
     SavedStateRegistryOwner {
+
     private val store = ViewModelStore()
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
 
     override val savedStateRegistry: SavedStateRegistry
-    get() = savedStateRegistryController.savedStateRegistry
+        get() = savedStateRegistryController.savedStateRegistry
     override val viewModelStore: ViewModelStore
         get() = store
     override val lifecycle: Lifecycle
@@ -41,8 +50,14 @@ class IMEService : LifecycleInputMethodService(),
 
     override fun onCreate() {
         super.onCreate()
+        savedStateRegistryController.performRestore(null)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val colorIntent = intent?.getStringExtra("ColorKey") ?: "ff00b3"
         viewModelKeyboard = ViewModelProvider(this)[KeyboardViewModel::class.java]
         viewModelKeyboard.setColor(colorIntent)
-        savedStateRegistryController.performRestore(null)
+        return super.onStartCommand(intent, flags, startId)
     }
 }
