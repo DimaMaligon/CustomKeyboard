@@ -1,12 +1,7 @@
-package com.example.customkeyboard
+package com.example.customkeyboard.keyboard
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.ResultReceiver
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi

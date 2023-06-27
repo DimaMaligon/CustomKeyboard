@@ -1,4 +1,4 @@
-package com.example.customkeyboard
+package com.example.customkeyboard.keyboard
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -23,11 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -46,6 +43,9 @@ fun KeyboardScreen(viewKeyboard: KeyboardViewModel) {
         keysMatrix.forEach { row ->
             FixedHeightBox(modifier = Modifier.fillMaxWidth()) {
                 Row(Modifier) {
+                    if(row.contains("Z")){
+                        KeyboardKeyDelete(keyboardKey = "<-", viewKeyboard = viewKeyboard)
+                    }
                     row.forEach { key ->
                         KeyboardKey(keyboardKey = key, viewKeyboard = viewKeyboard)
                     }
@@ -84,53 +84,6 @@ fun FixedHeightBox(modifier: Modifier, content: @Composable () -> Unit) {
             placeables.forEach {
                 it.placeRelative(layoutWidth - it.width, layoutHeight - it.height)
             }
-        }
-    }
-}
-
-@SuppressLint("StateFlowValueCalledInComposition")
-@Composable
-fun KeyboardKey(
-    keyboardKey: String, viewKeyboard: KeyboardViewModel
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val pressed = interactionSource.collectIsPressedAsState()
-    val context = LocalContext.current
-    val viewmodel = viewKeyboard
-    val color by viewmodel.color.collectAsState()
-    Box(contentAlignment = Alignment.Center) {
-        Text(
-            keyboardKey,
-            Modifier
-                .background(Color(android.graphics.Color.parseColor("#" + color)))
-                .border(3.dp, Color.Black)
-                .clickable(interactionSource = interactionSource, indication = null) {
-                    (context as IMEService).currentInputConnection.commitText(
-                        keyboardKey,
-                        0
-                    )
-                }
-                .padding(
-                    start = 12.dp,
-                    end = 12.dp,
-                    top = 16.dp,
-                    bottom = 16.dp
-                )
-
-        )
-        if (pressed.value) {
-            Text(
-                keyboardKey,
-                Modifier
-                    .border(1.dp, Color.Black)
-                    .background(Color.Gray)
-                    .padding(
-                        start = 13.dp,
-                        end = 13.dp,
-                        top = 17.dp,
-                        bottom = 17.dp
-                    )
-            )
         }
     }
 }

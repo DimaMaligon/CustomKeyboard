@@ -1,4 +1,4 @@
-package com.example.customkeyboard
+package com.example.customkeyboard.keyboard
 
 import android.content.Context
 import android.os.Build
