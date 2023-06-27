@@ -50,13 +50,14 @@ class IMEService : LifecycleInputMethodService(),
 
     override fun onCreate() {
         super.onCreate()
+        viewModelKeyboard = ViewModelProvider(this)[KeyboardViewModel::class.java]
         savedStateRegistryController.performRestore(null)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val colorIntent = intent?.getStringExtra("ColorKey") ?: "ff00b3"
-        viewModelKeyboard = ViewModelProvider(this)[KeyboardViewModel::class.java]
+        Log.d("Color tag", colorIntent)
         viewModelKeyboard.setColor(colorIntent)
         return super.onStartCommand(intent, flags, startId)
     }
