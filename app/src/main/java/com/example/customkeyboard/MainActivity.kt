@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.navigation.compose.rememberNavController
 import com.example.customkeyboard.navigation.NavGraph
+import com.example.customkeyboard.ui.theme.AppTheme
 
 lateinit var inputMethodManager: InputMethodManager
 
@@ -20,9 +21,10 @@ class MainActivity : ComponentActivity() {
             this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         setContent {
             val navController = rememberNavController()
-
-            Surface(color = MaterialTheme.colorScheme.background) {
-                NavGraph(navController = navController)
+            AppTheme() {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    NavGraph(navController = navController)
+                }
             }
             isSystemInDarkTheme()
         }
