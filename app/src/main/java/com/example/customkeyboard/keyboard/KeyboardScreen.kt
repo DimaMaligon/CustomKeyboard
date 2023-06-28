@@ -1,4 +1,4 @@
-package com.example.customkeyboard
+package com.example.customkeyboard.keyboard
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -44,6 +44,9 @@ fun KeyboardScreen(viewKeyboard: KeyboardViewModel) {
         keysMatrix.forEach { row ->
             FixedHeightBox(modifier = Modifier.fillMaxWidth()) {
                 Row(Modifier) {
+                    if(row.contains("Z")){
+                        KeyboardKeyDelete(keyboardKey = "<-", viewKeyboard = viewKeyboard)
+                    }
                     row.forEach { key ->
                         KeyboardKey(keyboardKey = key, viewKeyboard = viewKeyboard)
                     }
