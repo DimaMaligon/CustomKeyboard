@@ -30,6 +30,7 @@ import com.example.customkeyboard.viewmodel.KeyboardViewModel
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun KeyboardScreen(viewKeyboard: KeyboardViewModel) {
+    val colorBackGround by viewKeyboard.colorBackground.collectAsState()
     val keysMatrix = arrayOf(
         arrayOf("Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"),
         arrayOf("A", "S", "D", "F", "G", "H", "J", "K", "L"),
@@ -37,7 +38,7 @@ fun KeyboardScreen(viewKeyboard: KeyboardViewModel) {
     )
     Column(
         modifier = Modifier
-            .background(Color(0xFF9575CD))
+            .background(Color(android.graphics.Color.parseColor("#" + colorBackGround)))
             .fillMaxWidth()
     ) {
         keysMatrix.forEach { row ->
@@ -84,6 +85,52 @@ fun FixedHeightBox(modifier: Modifier, content: @Composable () -> Unit) {
             placeables.forEach {
                 it.placeRelative(layoutWidth - it.width, layoutHeight - it.height)
             }
+        }
+    }
+}
+
+@SuppressLint("StateFlowValueCalledInComposition")
+@Composable
+fun KeyboardKey(
+    keyboardKey: String, viewKeyboard: KeyboardViewModel
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed = interactionSource.collectIsPressedAsState()
+    val context = LocalContext.current
+    val color by viewKeyboard.colorKeys.collectAsState()
+    Box(contentAlignment = Alignment.Center) {
+        Text(
+            keyboardKey,
+            Modifier
+                .background(Color(android.graphics.Color.parseColor("#" + color)))
+                .border(3.dp, Color.Black)
+                .clickable(interactionSource = interactionSource, indication = null) {
+                    (context as IMEService).currentInputConnection.commitText(
+                        keyboardKey,
+                        0
+                    )
+                }
+                .padding(
+                    start = 12.dp,
+                    end = 12.dp,
+                    top = 16.dp,
+                    bottom = 16.dp
+                )
+
+        )
+        if (pressed.value) {
+            Text(
+                keyboardKey,
+                Modifier
+                    .border(1.dp, Color.Black)
+                    .background(Color.Gray)
+                    .padding(
+                        start = 13.dp,
+                        end = 13.dp,
+                        top = 17.dp,
+                        bottom = 17.dp
+                    )
+            )
         }
     }
 }
