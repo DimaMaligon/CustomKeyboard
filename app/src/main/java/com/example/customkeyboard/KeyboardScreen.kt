@@ -23,16 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun KeyboardScreen(viewKeyboard: KeyboardViewModel) {
+    val colorBackGround by viewKeyboard.colorBackground.collectAsState()
     val keysMatrix = arrayOf(
         arrayOf("Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"),
         arrayOf("A", "S", "D", "F", "G", "H", "J", "K", "L"),
@@ -40,7 +38,7 @@ fun KeyboardScreen(viewKeyboard: KeyboardViewModel) {
     )
     Column(
         modifier = Modifier
-            .background(Color(0xFF9575CD))
+            .background(Color(android.graphics.Color.parseColor("#" + colorBackGround)))
             .fillMaxWidth()
     ) {
         keysMatrix.forEach { row ->
@@ -96,8 +94,7 @@ fun KeyboardKey(
     val interactionSource = remember { MutableInteractionSource() }
     val pressed = interactionSource.collectIsPressedAsState()
     val context = LocalContext.current
-    val viewmodel = viewKeyboard
-    val color by viewmodel.color.collectAsState()
+    val color by viewKeyboard.colorKeys.collectAsState()
     Box(contentAlignment = Alignment.Center) {
         Text(
             keyboardKey,

@@ -5,10 +5,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class KeyboardViewModel: ViewModel() {
-    private val colorMutable = MutableStateFlow("ffffff")
-    val color: StateFlow<String> = colorMutable
+    private val colorKeysMutable = MutableStateFlow("ffffff")
+    val colorKeys: StateFlow<String> = colorKeysMutable
+    private val colorBackgroundMutable = MutableStateFlow("ffffff")
+    val colorBackground: StateFlow<String> = colorBackgroundMutable
 
-    fun setColor(color: String) {
-        colorMutable.value = color
+    fun setColorKeys(color: String) {
+        colorKeysMutable.value = color
+    }
+
+    fun setColorBackground(color: String) {
+        colorBackgroundMutable.value = color
     }
 }

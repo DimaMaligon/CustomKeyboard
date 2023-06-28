@@ -1,12 +1,7 @@
 package com.example.customkeyboard
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.ResultReceiver
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -56,9 +51,11 @@ class IMEService : LifecycleInputMethodService(),
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val colorIntent = intent?.getStringExtra("ColorKey") ?: "ff00b3"
-        Log.d("Color tag", colorIntent)
-        viewModelKeyboard.setColor(colorIntent)
+        val colorKeyIntent = intent?.getStringExtra("ColorKey") ?: "ff00b3"
+        val colorBackgroundIntent = intent?.getStringExtra("ColorBackground") ?: "ff00b3"
+
+        viewModelKeyboard.setColorKeys(colorKeyIntent)
+        viewModelKeyboard.setColorBackground(colorBackgroundIntent)
         return super.onStartCommand(intent, flags, startId)
     }
 }
