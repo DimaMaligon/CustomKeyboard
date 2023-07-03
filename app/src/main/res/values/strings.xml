@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CustomKeyboard</string>
+    <string name="key_icon">Key icon</string>
 </resources>
