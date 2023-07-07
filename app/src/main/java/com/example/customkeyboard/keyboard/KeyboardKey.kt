@@ -11,9 +11,8 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -28,14 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import com.example.customkeyboard.viewmodel.KeyboardViewModel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.customkeyboard.R
+import com.example.customkeyboard.viewmodel.KeyboardViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -52,6 +51,7 @@ fun KeyboardKey(
     val pressed = interactionSource.collectIsPressedAsState()
     val context = LocalContext.current
     val colorKey by viewKeyboard.colorKeys.collectAsState()
+    val keySize by viewKeyboard.keySize.collectAsState()
     val iconMap = hashMapOf(
         "emoji" to R.drawable.outline_emoji_emotions_24,
         "shift" to R.drawable.shift_outlined,
@@ -65,9 +65,8 @@ fun KeyboardKey(
     )
     Box(
         modifier = modifier
-            .width(10.dp)
-            .height(60.dp)
-            .padding(1.dp),
+            .size(10.dp, 60.dp)
+            .padding(keySize.start.dp, keySize.top.dp, keySize.end.dp, keySize.bottom.dp),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Card() {
@@ -95,7 +94,7 @@ fun KeyboardKey(
                         )
                     }
                     .padding(
-                        top = 14.dp, bottom = 14.dp
+                        top = 14.dp
                     ),
                     text = keyboardKey,
                     textAlign = TextAlign.Center,
@@ -104,15 +103,11 @@ fun KeyboardKey(
                 if (pressed.value) {
                     Text(
                         modifier = modifier
-                            .fillMaxWidth()
-                            .background(Color.Blue)
-                            .padding(
-                                top = 16.dp, bottom = 48.dp
-                            ),
+                            .size(50.dp, 80.dp),
                         text = keyboardKey,
                         textAlign = TextAlign.Center,
                         color = Color.Green,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
