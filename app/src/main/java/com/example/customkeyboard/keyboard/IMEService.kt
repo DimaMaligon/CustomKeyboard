@@ -15,6 +15,7 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import com.example.customkeyboard.data.KeySize
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
 
 class IMEService : LifecycleInputMethodService(),
@@ -51,11 +52,20 @@ class IMEService : LifecycleInputMethodService(),
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val colorKeyIntent = intent?.getStringExtra("ColorKey") ?: "ff00b3"
-        val colorBackgroundIntent = intent?.getStringExtra("ColorBackground") ?: "ff00b3"
-
-        viewModelKeyboard.setColorKeys(colorKeyIntent)
-        viewModelKeyboard.setColorBackground(colorBackgroundIntent)
+        intent?.getStringExtra("ColorKey")?.let {
+            viewModelKeyboard.setColorKeys(it)
+        }
+        intent?.getStringExtra("ColorBackground")?.let {
+            viewModelKeyboard.setColorBackground(it)
+        }
+        intent?.getSerializableExtra("SizeKey", ArrayList::class.java)?.let {
+            viewModelKeyboard.setKeySize(
+                KeySize(
+                    it[0] as Int,
+                    it[1] as Int, it[2] as Int, it[3] as Int
+                )
+            )
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 }

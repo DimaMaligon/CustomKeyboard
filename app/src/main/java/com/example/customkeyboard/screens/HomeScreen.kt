@@ -3,16 +3,11 @@ package com.example.customkeyboard.screens
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.provider.Settings
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -33,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.customkeyboard.R
 import com.example.customkeyboard.inputMethodManager
-import com.example.customkeyboard.navigation.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,34 +50,15 @@ fun HomeScreen(navController: NavHostController) {
                     .fillMaxSize()
             ) {
                 TagsMenu(navController = navController)
-                Options()
+                HomeOptions()
             }
         })
 }
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun TagsMenu(navController: NavHostController) {
-    val vertScrollState = ScrollState(0)
-
-    FlowRow(
-        Modifier
-            .fillMaxWidth()
-            .horizontalScroll(vertScrollState)
-    ) {
-        Button(modifier = Modifier.height(35.dp), onClick = {
-            navController.navigate(Screens.Color.route)
-        }) {
-            Text(text = "Цвет")
-        }
-    }
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun Options() {
+fun HomeOptions() {
     val (text, setValue) = remember { mutableStateOf(TextFieldValue("Try here")) }
     val context = LocalContext.current
 
