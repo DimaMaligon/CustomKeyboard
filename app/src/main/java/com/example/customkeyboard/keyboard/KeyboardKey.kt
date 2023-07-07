@@ -1,7 +1,6 @@
 package com.example.customkeyboard.keyboard
 
 import android.content.Context
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.inputmethod.InputConnection
@@ -10,13 +9,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -31,14 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import com.example.customkeyboard.viewmodel.KeyboardViewModel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.customkeyboard.R
+import com.example.customkeyboard.viewmodel.KeyboardViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -67,12 +63,10 @@ fun KeyboardKey(
         "123" to R.drawable.baseline_123,
         "ABC" to R.drawable.baseline_abc,
     )
-    Log.d("key object", "$keySize")
     Box(
         modifier = modifier
             .size(10.dp, 60.dp)
-            .padding(keySize.start.dp, keySize.top.dp, keySize.end.dp, keySize.bottom.dp)
-           ,
+            .padding(keySize.start.dp, keySize.top.dp, keySize.end.dp, keySize.bottom.dp),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Card() {
