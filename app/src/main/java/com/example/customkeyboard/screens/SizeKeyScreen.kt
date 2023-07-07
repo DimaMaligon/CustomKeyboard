@@ -18,10 +18,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,17 +50,21 @@ fun SizeKeyScreen(
     navController: NavHostController, viewKeyboard: KeyboardViewModel
 ) {
     Scaffold(topBar = {
-        TopAppBar(title = {
-            Text(
-                text = stringResource(id = R.string.app_name), Modifier.padding()
-            )
-        }, navigationIcon = {
-            IconButton(onClick = {
-                navController.popBackStack()
-            }) {
-                Icon(Icons.Filled.ArrowBack, "backIcon")
-            }
-        })
+        TopAppBar(
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ),
+            title = {
+                Text(
+                    text = stringResource(id = R.string.screen_size), Modifier.padding(55.dp)
+                )
+            }, navigationIcon = {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
+                }
+            })
     }, content = { padding ->
         Column(
             modifier = Modifier
@@ -74,7 +80,7 @@ fun SizeKeyScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OptionSizeKey(viewKeyboard: KeyboardViewModel) {
-    val (text, setValue) = remember { mutableStateOf(TextFieldValue("Try here")) }
+    val (text, setValue) = remember { mutableStateOf(TextFieldValue("Напечатай тут")) }
 
     Column(
         Modifier
@@ -84,7 +90,7 @@ fun OptionSizeKey(viewKeyboard: KeyboardViewModel) {
     ) {
         ParametersKey(viewKeyboard = viewKeyboard)
 
-        Text(text = "Попробуй новую клавиатуру", Modifier.padding(top = 20.dp))
+        Text(text = stringResource(id = R.string.title_try_it), Modifier.padding(top = 20.dp))
         TextField(
             value = text,
             onValueChange = setValue,
@@ -116,7 +122,8 @@ fun ParametersKey(viewKeyboard: KeyboardViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "лево", Modifier.padding(end = 10.dp)
+                        text = stringResource(id = R.string.size_left),
+                        Modifier.padding(end = 10.dp)
                     )
                     TextFieldSizeKey(
                         value = keySizeLeft, onValueChange = { newText ->
@@ -135,7 +142,7 @@ fun ParametersKey(viewKeyboard: KeyboardViewModel) {
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "верх", Modifier.padding(bottom = 10.dp)
+                    text = stringResource(id = R.string.size_top), Modifier.padding(bottom = 10.dp)
                 )
                 TextFieldSizeKey(
                     value = keySizeTop, onValueChange = { newText ->
@@ -185,7 +192,8 @@ fun ParametersKey(viewKeyboard: KeyboardViewModel) {
                         .padding(top = 10.dp, bottom = 10.dp)
                 )
                 Text(
-                    text = "низ", Modifier.padding(bottom = 10.dp)
+                    text = stringResource(id = R.string.size_bottom),
+                    Modifier.padding(bottom = 10.dp)
                 )
             }
             Column(
@@ -208,7 +216,8 @@ fun ParametersKey(viewKeyboard: KeyboardViewModel) {
                             .padding(start = 10.dp)
                     )
                     Text(
-                        text = "право", Modifier.padding(start = 10.dp)
+                        text = stringResource(id = R.string.size_right),
+                        Modifier.padding(start = 10.dp)
                     )
                 }
             }
@@ -238,9 +247,7 @@ fun SaveKeyObject(
         context.startService(intent)
     }) {
         Text(
-            "Применить настройки"
+            stringResource(id = R.string.button_save_size)
         )
     }
 }
-
-

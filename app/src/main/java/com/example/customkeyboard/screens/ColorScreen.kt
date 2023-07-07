@@ -21,10 +21,12 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,15 +50,20 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 @Composable
 fun ColorScreen(navController: NavHostController) {
     Scaffold(topBar = {
-        TopAppBar(title = {
+        TopAppBar(
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ),
+            title = {
             Text(
-                text = stringResource(id = R.string.app_name), Modifier.padding()
+                text = stringResource(id = R.string.screen_color),
+                Modifier.padding(55.dp)
             )
         }, navigationIcon = {
             IconButton(onClick = {
                 navController.popBackStack()
             }) {
-                Icon(Icons.Filled.ArrowBack, "backIcon")
+                Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
             }
         })
     }, content = { padding ->
@@ -65,6 +72,7 @@ fun ColorScreen(navController: NavHostController) {
                 .padding(padding)
                 .fillMaxSize()
         ) {
+            TagsMenu(navController = navController)
             MainElements()
         }
     })
@@ -73,26 +81,12 @@ fun ColorScreen(navController: NavHostController) {
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainElements() {
-    val (text, setValue) = remember { mutableStateOf(TextFieldValue("Try here")) }
-    val vertScrollState = ScrollState(0)
-
-    FlowRow(
-        Modifier
-            .fillMaxWidth()
-            .horizontalScroll(vertScrollState)
-    ) {
-        Button(modifier = Modifier.height(35.dp), onClick = {
-            inputMethodManager.showInputMethodPicker()
-        }) {
-            Text(text = "Цвет")
-        }
-    }
+    val (text, setValue) = remember { mutableStateOf(TextFieldValue("Напечатай тут")) }
 
     Column(
         Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Text(text = "Попробуй новую клавиатуру", Modifier.padding(top = 20.dp))
+        Text(text = stringResource(id = R.string.title_try_it), Modifier.padding(top = 20.dp))
         TextField(
             value = text,
             onValueChange = setValue,
@@ -113,13 +107,13 @@ fun ColorPickerCircle() {
 
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Цвет клавиатуры")
+            Text(text = stringResource(id = R.string.color_keyboard))
             Checkbox(checked = checkedStateKeyboardColor, onCheckedChange = {
                 checkedStateKeyboardColor = it
             })
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Цвет фона")
+            Text(text = stringResource(id = R.string.color_background_keyboard))
             Checkbox(checked = checkedStateBackgroundColor, onCheckedChange = {
                 checkedStateBackgroundColor = it
             })

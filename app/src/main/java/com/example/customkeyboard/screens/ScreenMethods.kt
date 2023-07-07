@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -91,6 +92,7 @@ fun TagsMenu(navController: NavHostController) {
         Modifier
             .fillMaxWidth()
             .horizontalScroll(vertScrollState)
+            .padding(top = 15.dp)
     ) {
         Button(modifier = Modifier.height(35.dp), onClick = {
             navController.navigate(Screens.Color.route)
