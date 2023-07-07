@@ -12,10 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,10 +37,13 @@ import com.example.customkeyboard.inputMethodManager
 fun HomeScreen(navController: NavHostController) {
     Scaffold(topBar = {
         TopAppBar(
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+              containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ),
             title = {
                 Text(
                     text = stringResource(id = R.string.app_name),
-                    Modifier.padding()
+                    Modifier.padding(95.dp)
                 )
             }
         )
@@ -59,7 +65,7 @@ fun HomeScreen(navController: NavHostController) {
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun HomeOptions() {
-    val (text, setValue) = remember { mutableStateOf(TextFieldValue("Try here")) }
+    val (text, setValue) = remember { mutableStateOf(TextFieldValue("Напечатай тут")) }
     val context = LocalContext.current
 
     Column(
@@ -76,15 +82,15 @@ fun HomeOptions() {
                 onClick = {
                     context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS))
                 }) {
-                Text(text = "Enable IME")
+                Text(text = stringResource(id = R.string.turn_on_keyboard))
             }
             Button(modifier = Modifier.size(180.dp, 50.dp), onClick = {
                 inputMethodManager.showInputMethodPicker()
             }) {
-                Text(text = "Select IME")
+                Text(text = stringResource(id = R.string.choose_keyboard))
             }
         }
-        Text(text = "Попробуй новую клавиатуру", Modifier.padding(top = 20.dp))
+        Text(text = stringResource(id = R.string.title_try_it), Modifier.padding(top = 20.dp))
         TextField(
             value = text, onValueChange = setValue,
             modifier = Modifier
