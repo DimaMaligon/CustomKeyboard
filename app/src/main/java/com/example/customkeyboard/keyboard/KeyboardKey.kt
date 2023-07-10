@@ -65,6 +65,7 @@ fun KeyboardKey(
     }
     val iconMap = hashMapOf(
         "emoji" to R.drawable.outline_emoji_emotions_24,
+        "back" to R.drawable.baseline_arrow_back_24,
         "shift" to R.drawable.shift_outlined,
         "Shift" to R.drawable.shift_filled,
         "SHIFT" to R.drawable.shfit_double_caps,
@@ -182,9 +183,12 @@ fun whenKeyClick(
             )
             currentInputConnection.sendKeyEvent(
                 KeyEvent(
-                    KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_LANGUAGE_SWITCH
+                    KeyEvent.FLAG_LONG_PRESS, KeyEvent.KEYCODE_LANGUAGE_SWITCH
                 )
             )
+        }
+        "emoji" -> {
+            keyboardState.value = KeyboardState.EMOJI
         }
 
         "Shift" -> {
@@ -197,6 +201,10 @@ fun whenKeyClick(
 
         "shift" -> {
             keyboardState.value = KeyboardState.CAPS
+        }
+
+        "back" -> {
+            keyboardState.value = KeyboardState.NOCAPS
         }
 
         "delete" -> {

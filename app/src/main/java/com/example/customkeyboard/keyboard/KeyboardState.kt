@@ -5,5 +5,6 @@ enum class KeyboardState {
     CAPS,
     DOUBLECAPS,
     NUMBER,
-    STRING
+    STRING,
+    EMOJI
 }

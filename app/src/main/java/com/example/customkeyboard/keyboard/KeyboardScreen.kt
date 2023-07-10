@@ -64,6 +64,14 @@ fun KeyboardScreen(viewKeyboard: KeyboardViewModel, modifier: Modifier = Modifie
             arrayOf("ABC", ",", "_", " ", "/", ".", "enter")
         )
 
+        KeyboardState.EMOJI -> arrayOf(
+            arrayOf("back","😁","😂","😃","😆","😇","😈","😉","😊","😋","😌","😍","😎"),
+            arrayOf("😓","😔","😖","😘","😚","😜","😝","😞","😠","😡","😢","😣","😤"),
+            arrayOf("😥","😨","😩","😪","😫","😭","😰","😐","😒","😱","😲","😳","😵"),
+            arrayOf("😶","😷","😸","😹","😺","😻","😼","😽","😾","😿","🙀","🙅","😏"),
+            arrayOf("🙇","🙈","🙉","🙊","🙋","🙌","🙍","🙎","✋","✋","🐲","👀","🐝"),
+        )
+
         else -> arrayOf(
             arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0"),
             arrayOf("Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"),
@@ -74,7 +82,7 @@ fun KeyboardScreen(viewKeyboard: KeyboardViewModel, modifier: Modifier = Modifie
     }
     Column(
         modifier = Modifier
-            .background(Color(android.graphics.Color.parseColor("#" + colorBackGround)))
+            .background(Color(android.graphics.Color.parseColor("#$colorBackGround")))
             .fillMaxWidth()
     ) {
         keysMatrix.forEach { row ->
