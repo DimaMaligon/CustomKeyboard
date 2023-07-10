@@ -52,6 +52,9 @@ class IMEService : LifecycleInputMethodService(),
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.getStringExtra("FontKey")?.let {
+            viewModelKeyboard.setFontKey(it)
+        }
         intent?.getStringExtra("ColorKey")?.let {
             viewModelKeyboard.setColorKeys(it)
         }

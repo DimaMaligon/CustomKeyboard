@@ -1,5 +1,6 @@
 package com.example.customkeyboard.keyboard
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,17 +31,20 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.customkeyboard.R
+import com.example.customkeyboard.data.Fonts
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@SuppressLint("ProduceStateDoesNotAssignValue")
 @Composable
 fun KeyboardKey(
     modifier: Modifier,
@@ -52,6 +57,12 @@ fun KeyboardKey(
     val context = LocalContext.current
     val colorKey by viewKeyboard.colorKeys.collectAsState()
     val keySize by viewKeyboard.keySize.collectAsState()
+    val keyFont by viewKeyboard.fontKey.collectAsState()
+    val keyFontObject by remember {
+        derivedStateOf {
+            findFontObject(keyFont)
+        }
+    }
     val iconMap = hashMapOf(
         "emoji" to R.drawable.outline_emoji_emotions_24,
         "shift" to R.drawable.shift_outlined,
@@ -99,6 +110,7 @@ fun KeyboardKey(
                     text = keyboardKey,
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
+                    fontFamily = keyFontObject,
                     fontWeight = FontWeight.Bold)
                 if (pressed.value) {
                     Text(
@@ -211,4 +223,14 @@ fun whenKeyClick(
         "123" -> keyboardState.value = KeyboardState.NUMBER
         "ABC" -> keyboardState.value = KeyboardState.STRING
     }
+}
+
+fun findFontObject(nameFonts: String): FontFamily {
+    val listFonts = Fonts.listFonts
+    for (font in listFonts) {
+        if (nameFonts == font.name) {
+            return font.font
+        }
+    }
+    return listFonts[0].font
 }

@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.customkeyboard.screens.ColorScreen
+import com.example.customkeyboard.screens.FontScreen
 import com.example.customkeyboard.screens.HomeScreen
 import com.example.customkeyboard.screens.SizeKeyScreen
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
@@ -31,7 +32,12 @@ fun NavGraph(navController: NavHostController, viewModelKeyboard: KeyboardViewMo
         composable(
             route = Screens.SizeKey.route
         ) {
-            SizeKeyScreen(navController, viewModelKeyboard)
+            SizeKeyScreen(navController)
+        }
+        composable(
+            route = Screens.FontKey.route
+        ) {
+            FontScreen(navController)
         }
 
         bottomNavGraph(navController)

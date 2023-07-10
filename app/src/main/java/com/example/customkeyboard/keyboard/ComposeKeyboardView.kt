@@ -9,11 +9,11 @@ import com.example.customkeyboard.viewmodel.KeyboardViewModel
 
 class ComposeKeyboardView constructor(
     context: Context, val viewKeyboard: KeyboardViewModel
-    ) : AbstractComposeView(context) {
+) : AbstractComposeView(context) {
 
     @RequiresApi(Build.VERSION_CODES.R)
     @Composable
     override fun Content() {
-        KeyboardScreen( viewKeyboard)
+        KeyboardScreen(viewKeyboard)
     }
 }

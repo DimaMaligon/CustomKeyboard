@@ -104,6 +104,11 @@ fun TagsMenu(navController: NavHostController) {
         }) {
             Text(text = "Размер клавиш")
         }
+        Button(modifier = Modifier.height(35.dp), onClick = {
+            navController.navigate(Screens.FontKey.route)
+        }) {
+            Text(text = "Вид шрифта")
+        }
     }
 }
 
