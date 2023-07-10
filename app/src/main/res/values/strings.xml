@@ -2,13 +2,15 @@
     <string name="app_name">Custom Keyboard</string>
     <string name="screen_color">Изменение цвета</string>
     <string name="screen_size">Изменение размера</string>
+    <string name="screen_font">Изменение шрифта</string>
     <string name="back_icon">"backIcon"</string>
     <string name="title_try_it">Попробуй новую клавиатуру</string>
     <string name="turn_on_keyboard">Включить клаву</string>
     <string name="choose_keyboard">Выбрать клаву</string>
     <string name="color_keyboard">Цвет клавиатуры</string>
     <string name="color_background_keyboard">Цвет фона</string>
-    <string name="button_save_size">Применить настройки</string>
+    <string name="button_save">Применить настройки</string>
+    <string name="second_title_font">Список шрифтов</string>
     <string name="size_left">лево</string>
     <string name="size_top">верх</string>
     <string name="size_bottom">низ</string>

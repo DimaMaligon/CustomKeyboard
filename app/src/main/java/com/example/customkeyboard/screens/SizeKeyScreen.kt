@@ -42,12 +42,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.customkeyboard.R
 import com.example.customkeyboard.keyboard.IMEService
-import com.example.customkeyboard.viewmodel.KeyboardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SizeKeyScreen(
-    navController: NavHostController, viewKeyboard: KeyboardViewModel
+    navController: NavHostController
 ) {
     Scaffold(topBar = {
         TopAppBar(
@@ -72,23 +71,29 @@ fun SizeKeyScreen(
                 .fillMaxSize()
         ) {
             TagsMenu(navController = navController)
-            OptionSizeKey(viewKeyboard = viewKeyboard)
+            MainSizeKey()
         }
     })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OptionSizeKey(viewKeyboard: KeyboardViewModel) {
+fun MainSizeKey() {
     val (text, setValue) = remember { mutableStateOf(TextFieldValue("Напечатай тут")) }
 
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(top = 30.dp),
+            .padding(top = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ParametersKey(viewKeyboard = viewKeyboard)
+        Text(
+            text = "Отступы кнопки",
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.titleLarge,
+        )
+
+        ParametersKey()
 
         Text(text = stringResource(id = R.string.title_try_it), Modifier.padding(top = 20.dp))
         TextField(
@@ -104,129 +109,127 @@ fun OptionSizeKey(viewKeyboard: KeyboardViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ParametersKey(viewKeyboard: KeyboardViewModel) {
-    viewKeyboard.apply {
-        val maxChar = 2
-        var keySizeLeft by remember { mutableStateOf(TextFieldValue("10")) }
-        var keySizeTop by remember { mutableStateOf(TextFieldValue("10")) }
-        var keySizeRight by remember { mutableStateOf(TextFieldValue("10")) }
-        var keySizeBottom by remember { mutableStateOf(TextFieldValue("10")) }
+fun ParametersKey() {
+    val maxChar = 2
+    var keySizeLeft by remember { mutableStateOf(TextFieldValue("10")) }
+    var keySizeTop by remember { mutableStateOf(TextFieldValue("10")) }
+    var keySizeRight by remember { mutableStateOf(TextFieldValue("10")) }
+    var keySizeBottom by remember { mutableStateOf(TextFieldValue("10")) }
 
-        Row(
-            Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
+    Row(
+        Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
+    ) {
+        Column(
+            Modifier.height(250.dp), verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                Modifier.height(250.dp), verticalArrangement = Arrangement.Center
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.size_left),
-                        Modifier.padding(end = 10.dp)
-                    )
-                    TextFieldSizeKey(
-                        value = keySizeLeft, onValueChange = { newText ->
-                            val digits = newText.text.filter {
-                                it.isDigit()
-                            }
-                            if (newText.text.length <= maxChar) {
-                                keySizeLeft =
-                                    TextFieldValue(text = digits, selection = newText.selection)
-                            }
-                        }, modifier = Modifier
-                            .size(70.dp, 60.dp)
-                            .padding(end = 10.dp)
-                    )
-                }
-            }
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = stringResource(id = R.string.size_top), Modifier.padding(bottom = 10.dp)
+                    text = stringResource(id = R.string.size_left),
+                    Modifier.padding(end = 10.dp)
                 )
                 TextFieldSizeKey(
-                    value = keySizeTop, onValueChange = { newText ->
+                    value = keySizeLeft, onValueChange = { newText ->
                         val digits = newText.text.filter {
                             it.isDigit()
                         }
                         if (newText.text.length <= maxChar) {
-                            keySizeTop =
+                            keySizeLeft =
                                 TextFieldValue(text = digits, selection = newText.selection)
                         }
                     }, modifier = Modifier
-                        .size(60.dp, 70.dp)
-                        .padding(bottom = 10.dp)
+                        .size(70.dp, 60.dp)
+                        .padding(end = 10.dp)
                 )
-                Box(
-                    modifier = Modifier
-                        .size(60.dp, 50.dp)
-                        .padding(
-                            0.dp, 0.dp, 0.dp, 0.dp
-                        ),
-                    contentAlignment = Alignment.BottomCenter,
-                ) {
-                    Card() {
-                        Text(
-                            modifier = Modifier
-                                .background(Color.Gray)
-                                .size(50.dp, 50.dp)
-                                .padding(top = 12.dp),
-                            text = "A",
-                            textAlign = TextAlign.Center,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-                TextFieldSizeKey(
-                    value = keySizeBottom, onValueChange = { newText ->
-                        val digits = newText.text.filter {
-                            it.isDigit()
-                        }
-                        if (newText.text.length <= maxChar) {
-                            keySizeBottom =
-                                TextFieldValue(text = digits, selection = newText.selection)
-                        }
-                    }, modifier = Modifier
-                        .size(60.dp, 80.dp)
-                        .padding(top = 10.dp, bottom = 10.dp)
-                )
-                Text(
-                    text = stringResource(id = R.string.size_bottom),
-                    Modifier.padding(bottom = 10.dp)
-                )
-            }
-            Column(
-                Modifier.height(250.dp), verticalArrangement = Arrangement.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextFieldSizeKey(
-                        value = keySizeRight, onValueChange = { newText ->
-                            val digits = newText.text.filter {
-                                it.isDigit()
-                            }
-                            if (newText.text.length <= maxChar) {
-                                keySizeRight =
-                                    TextFieldValue(text = digits, selection = newText.selection)
-                            }
-                        }, modifier = Modifier
-                            .size(70.dp, 60.dp)
-                            .padding(start = 10.dp)
-                    )
-                    Text(
-                        text = stringResource(id = R.string.size_right),
-                        Modifier.padding(start = 10.dp)
-                    )
-                }
             }
         }
-        Row() {
-            SaveKeyObject(
-                left = keySizeLeft, top = keySizeTop, bottom = keySizeBottom, right = keySizeRight
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = stringResource(id = R.string.size_top), Modifier.padding(bottom = 10.dp)
+            )
+            TextFieldSizeKey(
+                value = keySizeTop, onValueChange = { newText ->
+                    val digits = newText.text.filter {
+                        it.isDigit()
+                    }
+                    if (newText.text.length <= maxChar) {
+                        keySizeTop =
+                            TextFieldValue(text = digits, selection = newText.selection)
+                    }
+                }, modifier = Modifier
+                    .size(60.dp, 70.dp)
+                    .padding(bottom = 10.dp)
+            )
+            Box(
+                modifier = Modifier
+                    .size(60.dp, 50.dp)
+                    .padding(
+                        0.dp, 0.dp, 0.dp, 0.dp
+                    ),
+                contentAlignment = Alignment.BottomCenter,
+            ) {
+                Card() {
+                    Text(
+                        modifier = Modifier
+                            .background(Color.Gray)
+                            .size(50.dp, 50.dp)
+                            .padding(top = 12.dp),
+                        text = "A",
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            TextFieldSizeKey(
+                value = keySizeBottom, onValueChange = { newText ->
+                    val digits = newText.text.filter {
+                        it.isDigit()
+                    }
+                    if (newText.text.length <= maxChar) {
+                        keySizeBottom =
+                            TextFieldValue(text = digits, selection = newText.selection)
+                    }
+                }, modifier = Modifier
+                    .size(60.dp, 80.dp)
+                    .padding(top = 10.dp, bottom = 10.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.size_bottom),
+                Modifier.padding(bottom = 10.dp)
             )
         }
+        Column(
+            Modifier.height(250.dp), verticalArrangement = Arrangement.Center
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextFieldSizeKey(
+                    value = keySizeRight, onValueChange = { newText ->
+                        val digits = newText.text.filter {
+                            it.isDigit()
+                        }
+                        if (newText.text.length <= maxChar) {
+                            keySizeRight =
+                                TextFieldValue(text = digits, selection = newText.selection)
+                        }
+                    }, modifier = Modifier
+                        .size(70.dp, 60.dp)
+                        .padding(start = 10.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.size_right),
+                    Modifier.padding(start = 10.dp)
+                )
+            }
+        }
+    }
+    Row() {
+        SaveKeyObject(
+            left = keySizeLeft, top = keySizeTop, bottom = keySizeBottom, right = keySizeRight
+        )
     }
 }
 
@@ -247,7 +250,7 @@ fun SaveKeyObject(
         context.startService(intent)
     }) {
         Text(
-            stringResource(id = R.string.button_save_size)
+            stringResource(id = R.string.button_save)
         )
     }
 }
