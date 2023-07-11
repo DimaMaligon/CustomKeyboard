@@ -8,4 +8,5 @@ sealed class Screens(val route: String) {
     object SizeKey: Screens("size_key_screen")
     object FontKey: Screens("font_key_screen")
     object User: Screens("user_screen")
+    object AboutApp: Screens("about_app_screen")
 }

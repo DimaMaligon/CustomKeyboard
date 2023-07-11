@@ -11,6 +11,12 @@
     <string name="color_background_keyboard">Цвет фона</string>
     <string name="button_save">Применить настройки</string>
     <string name="second_title_font">Список шрифтов</string>
+    <string name="about_app">О приложении</string>
+    <string name="text_about_app">Custom Keyboard - приложение в котором удобно создавать свою клавиатуру.
+        Если вам надоела ваша стандартная клава, то это приложение для вас.В нем вы можете
+        корректировать цвет клавиш и заднего фона, изменить размер клавиш,
+        выбрать понравившийся шрифт. </string>
+    <string name="user_screen">Пользователь</string>
     <string name="size_left">лево</string>
     <string name="size_top">верх</string>
     <string name="size_bottom">низ</string>
