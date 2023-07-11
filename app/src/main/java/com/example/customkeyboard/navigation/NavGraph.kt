@@ -1,15 +1,20 @@
 package com.example.customkeyboard.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.customkeyboard.screens.AboutAppScreen
 import com.example.customkeyboard.screens.ColorScreen
 import com.example.customkeyboard.screens.FontScreen
 import com.example.customkeyboard.screens.HomeScreen
 import com.example.customkeyboard.screens.SizeKeyScreen
+import com.example.customkeyboard.screens.UserScreen
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(navController: NavHostController, viewModelKeyboard: KeyboardViewModel) {
     NavHost(
@@ -34,10 +39,23 @@ fun NavGraph(navController: NavHostController, viewModelKeyboard: KeyboardViewMo
         ) {
             SizeKeyScreen(navController)
         }
+
         composable(
             route = Screens.FontKey.route
         ) {
             FontScreen(navController)
+        }
+
+        composable(
+            route = Screens.User.route
+        ) {
+            UserScreen(navController)
+        }
+
+        composable(
+            route = Screens.AboutApp.route
+        ) {
+            AboutAppScreen(navController)
         }
 
         bottomNavGraph(navController)

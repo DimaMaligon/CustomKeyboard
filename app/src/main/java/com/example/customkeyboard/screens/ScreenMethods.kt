@@ -19,19 +19,16 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.customkeyboard.inputMethodManager
 import com.example.customkeyboard.navigation.BottomBarScreen
 import com.example.customkeyboard.navigation.Screens
 import com.example.customkeyboard.ui.theme.shapes
@@ -75,8 +72,11 @@ fun RowScope.AddItem(
         } == true,
         onClick = {
             navHostController.navigate(screen.route) {
-                popUpTo(navHostController.graph.findStartDestination().id)
+                popUpTo(navHostController.graph.findStartDestination().id){
+                    saveState = true
+                }
                 launchSingleTop = true
+                restoreState = true
             }
         }
 
@@ -118,7 +118,7 @@ fun TextFieldSizeKey(
     modifier: Modifier,
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
-){
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,
