@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,29 +42,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.customkeyboard.R
+import com.example.customkeyboard.data_store.KeyboardDataStore
+import com.example.customkeyboard.data_store.SizeKeyData
 import com.example.customkeyboard.keyboard.IMEService
+import com.example.customkeyboard.viewmodel.KeyboardViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SizeKeyScreen(
-    navController: NavHostController
+    navController: NavHostController, viewModelKeyboard: KeyboardViewModel
 ) {
     Scaffold(topBar = {
-        TopAppBar(
-            colors = TopAppBarDefaults.mediumTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            ),
-            title = {
-                Text(
-                    text = stringResource(id = R.string.screen_size), Modifier.padding(55.dp)
-                )
-            }, navigationIcon = {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
-                }
-            })
+        TopAppBar(colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ), title = {
+            Text(
+                text = stringResource(id = R.string.screen_size), Modifier.padding(55.dp)
+            )
+        }, navigationIcon = {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
+                Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
+            }
+        })
     }, content = { padding ->
         Column(
             modifier = Modifier
@@ -71,14 +74,13 @@ fun SizeKeyScreen(
                 .fillMaxSize()
         ) {
             TagsMenu(navController = navController)
-            MainSizeKey()
+            MainSizeKey(viewModelKeyboard)
         }
     })
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainSizeKey() {
+fun MainSizeKey(viewModelKeyboard: KeyboardViewModel) {
     val (text, setValue) = remember { mutableStateOf(TextFieldValue("Напечатай тут")) }
 
     Column(
@@ -93,7 +95,7 @@ fun MainSizeKey() {
             style = MaterialTheme.typography.titleLarge,
         )
 
-        ParametersKey()
+        ParametersKey(viewModelKeyboard)
 
         Text(text = stringResource(id = R.string.title_try_it), Modifier.padding(top = 20.dp))
         TextField(
@@ -107,129 +109,130 @@ fun MainSizeKey() {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ParametersKey() {
-    val maxChar = 2
-    var keySizeLeft by remember { mutableStateOf(TextFieldValue("10")) }
-    var keySizeTop by remember { mutableStateOf(TextFieldValue("10")) }
-    var keySizeRight by remember { mutableStateOf(TextFieldValue("10")) }
-    var keySizeBottom by remember { mutableStateOf(TextFieldValue("10")) }
+fun ParametersKey(viewModelKeyboard: KeyboardViewModel) {
+    viewModelKeyboard.apply {
+        val maxChar = 2
+        var keySizeLeft by remember { mutableStateOf(TextFieldValue("10")) }
+        var keySizeTop by remember { mutableStateOf(TextFieldValue("10")) }
+        var keySizeRight by remember { mutableStateOf(TextFieldValue("10")) }
+        var keySizeBottom by remember { mutableStateOf(TextFieldValue("10")) }
 
-    Row(
-        Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
-    ) {
-        Column(
-            Modifier.height(250.dp), verticalArrangement = Arrangement.Center
+        Row(
+            Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                Modifier.height(250.dp), verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = stringResource(id = R.string.size_left),
-                    Modifier.padding(end = 10.dp)
-                )
-                TextFieldSizeKey(
-                    value = keySizeLeft, onValueChange = { newText ->
-                        val digits = newText.text.filter {
-                            it.isDigit()
-                        }
-                        if (newText.text.length <= maxChar) {
-                            keySizeLeft =
-                                TextFieldValue(text = digits, selection = newText.selection)
-                        }
-                    }, modifier = Modifier
-                        .size(70.dp, 60.dp)
-                        .padding(end = 10.dp)
-                )
-            }
-        }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = stringResource(id = R.string.size_top), Modifier.padding(bottom = 10.dp)
-            )
-            TextFieldSizeKey(
-                value = keySizeTop, onValueChange = { newText ->
-                    val digits = newText.text.filter {
-                        it.isDigit()
-                    }
-                    if (newText.text.length <= maxChar) {
-                        keySizeTop =
-                            TextFieldValue(text = digits, selection = newText.selection)
-                    }
-                }, modifier = Modifier
-                    .size(60.dp, 70.dp)
-                    .padding(bottom = 10.dp)
-            )
-            Box(
-                modifier = Modifier
-                    .size(60.dp, 50.dp)
-                    .padding(
-                        0.dp, 0.dp, 0.dp, 0.dp
-                    ),
-                contentAlignment = Alignment.BottomCenter,
-            ) {
-                Card() {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        modifier = Modifier
-                            .background(Color.Gray)
-                            .size(50.dp, 50.dp)
-                            .padding(top = 12.dp),
-                        text = "A",
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        text = stringResource(id = R.string.size_left),
+                        Modifier.padding(end = 10.dp)
+                    )
+                    TextFieldSizeKey(
+                        value = keySizeLeft, onValueChange = { newText ->
+                            val digits = newText.text.filter {
+                                it.isDigit()
+                            }
+                            if (newText.text.length <= maxChar) {
+                                keySizeLeft =
+                                    TextFieldValue(text = digits, selection = newText.selection)
+                            }
+                        }, modifier = Modifier
+                            .size(70.dp, 60.dp)
+                            .padding(end = 10.dp)
                     )
                 }
             }
-            TextFieldSizeKey(
-                value = keySizeBottom, onValueChange = { newText ->
-                    val digits = newText.text.filter {
-                        it.isDigit()
-                    }
-                    if (newText.text.length <= maxChar) {
-                        keySizeBottom =
-                            TextFieldValue(text = digits, selection = newText.selection)
-                    }
-                }, modifier = Modifier
-                    .size(60.dp, 80.dp)
-                    .padding(top = 10.dp, bottom = 10.dp)
-            )
-            Text(
-                text = stringResource(id = R.string.size_bottom),
-                Modifier.padding(bottom = 10.dp)
-            )
-        }
-        Column(
-            Modifier.height(250.dp), verticalArrangement = Arrangement.Center
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = stringResource(id = R.string.size_top), Modifier.padding(bottom = 10.dp)
+                )
                 TextFieldSizeKey(
-                    value = keySizeRight, onValueChange = { newText ->
+                    value = keySizeTop, onValueChange = { newText ->
                         val digits = newText.text.filter {
                             it.isDigit()
                         }
                         if (newText.text.length <= maxChar) {
-                            keySizeRight =
+                            keySizeTop =
                                 TextFieldValue(text = digits, selection = newText.selection)
                         }
                     }, modifier = Modifier
-                        .size(70.dp, 60.dp)
-                        .padding(start = 10.dp)
+                        .size(60.dp, 70.dp)
+                        .padding(bottom = 10.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(60.dp, 50.dp)
+                        .padding(
+                            0.dp, 0.dp, 0.dp, 0.dp
+                        ),
+                    contentAlignment = Alignment.BottomCenter,
+                ) {
+                    Card() {
+                        Text(
+                            modifier = Modifier
+                                .background(Color.Gray)
+                                .size(50.dp, 50.dp)
+                                .padding(top = 12.dp),
+                            text = "A",
+                            textAlign = TextAlign.Center,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                TextFieldSizeKey(
+                    value = keySizeBottom, onValueChange = { newText ->
+                        val digits = newText.text.filter {
+                            it.isDigit()
+                        }
+                        if (newText.text.length <= maxChar) {
+                            keySizeBottom =
+                                TextFieldValue(text = digits, selection = newText.selection)
+                        }
+                    }, modifier = Modifier
+                        .size(60.dp, 80.dp)
+                        .padding(top = 10.dp, bottom = 10.dp)
                 )
                 Text(
-                    text = stringResource(id = R.string.size_right),
-                    Modifier.padding(start = 10.dp)
+                    text = stringResource(id = R.string.size_bottom),
+                    Modifier.padding(bottom = 10.dp)
                 )
             }
+            Column(
+                Modifier.height(250.dp), verticalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextFieldSizeKey(
+                        value = keySizeRight, onValueChange = { newText ->
+                            val digits = newText.text.filter {
+                                it.isDigit()
+                            }
+                            if (newText.text.length <= maxChar) {
+                                keySizeRight =
+                                    TextFieldValue(text = digits, selection = newText.selection)
+                            }
+                        }, modifier = Modifier
+                            .size(70.dp, 60.dp)
+                            .padding(start = 10.dp)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.size_right),
+                        Modifier.padding(start = 10.dp)
+                    )
+                }
+            }
         }
-    }
-    Row() {
-        SaveKeyObject(
-            left = keySizeLeft, top = keySizeTop, bottom = keySizeBottom, right = keySizeRight
-        )
+        Row() {
+            SaveKeyObject(
+                left = keySizeLeft, top = keySizeTop, bottom = keySizeBottom, right = keySizeRight
+            )
+        }
     }
 }
 
@@ -238,6 +241,9 @@ fun SaveKeyObject(
     left: TextFieldValue, top: TextFieldValue, bottom: TextFieldValue, right: TextFieldValue
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val keyboardDataStore = KeyboardDataStore(context)
+
     Button(onClick = {
         val newLeft = left.text.toInt()
         val newTop = top.text.toInt()
@@ -248,6 +254,17 @@ fun SaveKeyObject(
         val intent = Intent(context, IMEService::class.java)
         intent.putExtra("SizeKey", listKeySize)
         context.startService(intent)
+
+        scope.launch {
+            keyboardDataStore.saveSizeKey(
+                SizeKeyData(
+                    startPadding = newLeft,
+                    topPadding = newTop,
+                    endPadding = newRight,
+                    bottomPadding = newBottom
+                )
+            )
+        }
     }) {
         Text(
             stringResource(id = R.string.button_save)

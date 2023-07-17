@@ -31,19 +31,19 @@ fun NavGraph(navController: NavHostController, viewModelKeyboard: KeyboardViewMo
         composable(
             route = Screens.Color.route
         ) {
-            ColorScreen(navController)
+            ColorScreen(navController, viewModelKeyboard)
         }
 
         composable(
             route = Screens.SizeKey.route
         ) {
-            SizeKeyScreen(navController)
+            SizeKeyScreen(navController, viewModelKeyboard)
         }
 
         composable(
             route = Screens.FontKey.route
         ) {
-            FontScreen(navController)
+            FontScreen(navController, viewModelKeyboard = viewModelKeyboard)
         }
 
         composable(

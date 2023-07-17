@@ -70,5 +70,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
     implementation "androidx.lifecycle:lifecycle-service:2.6.1"
 
-    implementation("com.github.skydoves:colorpicker-compose:1.0.2")
+    implementation('com.github.skydoves:colorpicker-compose:1.0.3')
+
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 }
