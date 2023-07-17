@@ -1,5 +1,6 @@
 package com.example.customkeyboard.keyboard
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -7,28 +8,74 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.customkeyboard.data.KeySize
+import com.example.customkeyboard.data_store.KeyboardDataStore
+import com.example.customkeyboard.screens.SimpleCircularProgressIndicator
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
 
 const val HEIGHT = 60
 
+@SuppressLint("FlowOperatorInvokedInComposition")
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun KeyboardScreen(viewKeyboard: KeyboardViewModel, modifier: Modifier = Modifier) {
+    viewKeyboard.apply {
+        val context = LocalContext.current
+        val keyboardDataStore = KeyboardDataStore(context)
+        val showProgress by showProgress.collectAsState()
+
+        LaunchedEffect(key1 = true) {
+            keyboardDataStore.getColorKey().collect { data ->
+                setColorKeys(data.colorKey)
+                onCloseProgress()
+            }
+
+            keyboardDataStore.getColorBackGround().collect { data ->
+                setColorBackground(data.colorBackground)
+                onCloseProgress()
+            }
+
+            keyboardDataStore.getFontKey().collect { data ->
+                setFontKey(data.fontKey)
+                onCloseProgress()
+            }
+
+            keyboardDataStore.getSizeKey().collect { data ->
+                setKeySize(
+                    KeySize(
+                        data.startPadding,
+                        data.topPadding,
+                        data.endPadding,
+                        data.bottomPadding
+                    )
+                )
+                onCloseProgress()
+            }
+        }
+
+        if (showProgress) {
+            SimpleCircularProgressIndicator(show = true) {
+            }
+        } else {
+            KeyboardScreenAllLines(viewKeyboard = viewKeyboard, modifier = modifier)
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.R)
+@Composable
+fun KeyboardScreenAllLines(viewKeyboard: KeyboardViewModel, modifier: Modifier) {
     val colorBackGround by viewKeyboard.colorBackground.collectAsState()
     val keyboardState = remember { mutableStateOf(KeyboardState.CAPS) }
 
@@ -65,11 +112,11 @@ fun KeyboardScreen(viewKeyboard: KeyboardViewModel, modifier: Modifier = Modifie
         )
 
         KeyboardState.EMOJI -> arrayOf(
-            arrayOf("back","😁","😂","😃","😆","😇","😈","😉","😊","😋","😌","😍","😎"),
-            arrayOf("😓","😔","😖","😘","😚","😜","😝","😞","😠","😡","😢","😣","😤"),
-            arrayOf("😥","😨","😩","😪","😫","😭","😰","😐","😒","😱","😲","😳","😵"),
-            arrayOf("😶","😷","😸","😹","😺","😻","😼","😽","😾","😿","🙀","🙅","😏"),
-            arrayOf("🙇","🙈","🙉","🙊","🙋","🙌","🙍","🙎","✋","✋","🐲","👀","🐝"),
+            arrayOf("back", "😁", "😂", "😃", "😆", "😇", "😈", "😉", "😊", "😋", "😌", "😍", "😎"),
+            arrayOf("😓", "😔", "😖", "😘", "😚", "😜", "😝", "😞", "😠", "😡", "😢", "😣", "😤"),
+            arrayOf("😥", "😨", "😩", "😪", "😫", "😭", "😰", "😐", "😒", "😱", "😲", "😳", "😵"),
+            arrayOf("😶", "😷", "😸", "😹", "😺", "😻", "😼", "😽", "😾", "😿", "🙀", "🙅", "😏"),
+            arrayOf("🙇", "🙈", "🙉", "🙊", "🙋", "🙌", "🙍", "🙎", "✋", "✋", "🐲", "👀", "🐝"),
         )
 
         else -> arrayOf(

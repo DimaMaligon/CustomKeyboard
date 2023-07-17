@@ -5,12 +5,14 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
@@ -72,7 +74,7 @@ fun RowScope.AddItem(
         } == true,
         onClick = {
             navHostController.navigate(screen.route) {
-                popUpTo(navHostController.graph.findStartDestination().id){
+                popUpTo(navHostController.graph.findStartDestination().id) {
                     saveState = true
                 }
                 launchSingleTop = true
@@ -132,4 +134,20 @@ fun TextFieldSizeKey(
         ),
         singleLine = true
     )
+}
+
+@Composable
+fun SimpleCircularProgressIndicator(
+    show: Boolean,
+    onConfirm: () -> Unit
+) {
+    if (show) {
+        CircularProgressIndicator(
+            Modifier
+                .fillMaxSize()
+                .padding(top = 400.dp),
+            strokeWidth = 5.dp,
+
+            )
+    }
 }

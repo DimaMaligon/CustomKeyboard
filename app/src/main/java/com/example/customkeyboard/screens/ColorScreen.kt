@@ -1,17 +1,11 @@
 package com.example.customkeyboard.screens
 
 import android.content.Intent
-import android.util.Log
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -28,9 +22,11 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,32 +36,36 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.customkeyboard.R
-import com.example.customkeyboard.inputMethodManager
+import com.example.customkeyboard.data_store.ColorBackgroundData
+import com.example.customkeyboard.data_store.ColorKeyData
+import com.example.customkeyboard.data_store.KeyboardDataStore
 import com.example.customkeyboard.keyboard.IMEService
+import com.example.customkeyboard.viewmodel.KeyboardViewModel
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColorScreen(navController: NavHostController) {
+fun ColorScreen(navController: NavHostController, viewModelKeyboard: KeyboardViewModel) {
     Scaffold(topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.mediumTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer
             ),
             title = {
-            Text(
-                text = stringResource(id = R.string.screen_color),
-                Modifier.padding(55.dp)
-            )
-        }, navigationIcon = {
-            IconButton(onClick = {
-                navController.popBackStack()
-            }) {
-                Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
-            }
-        })
+                Text(
+                    text = stringResource(id = R.string.screen_color),
+                    Modifier.padding(55.dp)
+                )
+            }, navigationIcon = {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
+                }
+            })
     }, content = { padding ->
         Column(
             modifier = Modifier
@@ -73,14 +73,13 @@ fun ColorScreen(navController: NavHostController) {
                 .fillMaxSize()
         ) {
             TagsMenu(navController = navController)
-            MainElements()
+            MainElements(viewModelKeyboard)
         }
     })
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MainElements() {
+fun MainElements(viewModelKeyboard: KeyboardViewModel) {
     val (text, setValue) = remember { mutableStateOf(TextFieldValue("Напечатай тут")) }
 
     Column(
@@ -94,29 +93,55 @@ fun MainElements() {
                 .size(360.dp, 90.dp)
                 .padding(top = 20.dp, bottom = 20.dp)
         )
-        ColorPickerCircle()
+        ColorPickerCircle(viewModelKeyboard)
     }
 }
 
 @Composable
-fun ColorPickerCircle() {
+fun ColorPickerCircle(viewModelKeyboard: KeyboardViewModel) {
     val context = LocalContext.current
     val controller = rememberColorPickerController()
     var checkedStateKeyboardColor by remember { mutableStateOf(true) }
     var checkedStateBackgroundColor by remember { mutableStateOf(false) }
+    val colorKey by viewModelKeyboard.colorKeys.collectAsState()
+    val colorBackground by viewModelKeyboard.colorBackground.collectAsState()
+    val keyboardDataStore = KeyboardDataStore(context)
 
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = stringResource(id = R.string.color_keyboard))
-            Checkbox(checked = checkedStateKeyboardColor, onCheckedChange = {
-                checkedStateKeyboardColor = it
-            })
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        val scope = rememberCoroutineScope()
+
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(text = stringResource(id = R.string.color_keyboard))
+                Checkbox(checked = checkedStateKeyboardColor, onCheckedChange = {
+                    checkedStateKeyboardColor = it
+                })
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(text = stringResource(id = R.string.color_background_keyboard))
+                Checkbox(checked = checkedStateBackgroundColor, onCheckedChange = {
+                    checkedStateBackgroundColor = it
+                })
+            }
         }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = stringResource(id = R.string.color_background_keyboard))
-            Checkbox(checked = checkedStateBackgroundColor, onCheckedChange = {
-                checkedStateBackgroundColor = it
-            })
+        Button(
+            onClick = {
+                scope.launch {
+                    keyboardDataStore.saveColorKey(
+                        ColorKeyData(
+                            colorKey = colorKey
+                        )
+                    )
+                    keyboardDataStore.saveBackgroundKey(
+                        ColorBackgroundData(
+                            colorBackground = colorBackground
+                        )
+                    )
+                }
+            }) {
+            Text(
+                stringResource(id = R.string.button_save)
+            )
         }
     }
 
@@ -129,11 +154,13 @@ fun ColorPickerCircle() {
                 val intent = Intent(context, IMEService::class.java)
                 intent.putExtra("ColorKey", colorEnvelope.hexCode)
                 context.startService(intent)
+                viewModelKeyboard.setColorKeys(colorEnvelope.hexCode)
             }
-            if (checkedStateBackgroundColor){
+            if (checkedStateBackgroundColor) {
                 val intent = Intent(context, IMEService::class.java)
                 intent.putExtra("ColorBackground", colorEnvelope.hexCode)
                 context.startService(intent)
+                viewModelKeyboard.setColorBackground(colorEnvelope.hexCode)
             }
         })
 }

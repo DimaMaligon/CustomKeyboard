@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -55,9 +56,9 @@ fun KeyboardKey(
     val interactionSource = remember { MutableInteractionSource() }
     val pressed = interactionSource.collectIsPressedAsState()
     val context = LocalContext.current
-    val colorKey by viewKeyboard.colorKeys.collectAsState()
     val keySize by viewKeyboard.keySize.collectAsState()
     val keyFont by viewKeyboard.fontKey.collectAsState()
+    val colorKey by viewKeyboard.colorKeys.collectAsState()
     val keyFontObject by remember {
         derivedStateOf {
             findFontObject(keyFont)
@@ -75,6 +76,7 @@ fun KeyboardKey(
         "123" to R.drawable.baseline_123,
         "ABC" to R.drawable.baseline_abc,
     )
+
     Box(
         modifier = modifier
             .size(10.dp, 60.dp)
@@ -85,12 +87,12 @@ fun KeyboardKey(
             if (iconMap.containsKey(keyboardKey)) {
                 iconMap[keyboardKey]?.let {
                     KeyboardIcon(
+                        colorKey = colorKey,
                         context = context,
                         modifier = modifier,
                         keyboardKey = keyboardKey,
                         drawable = it,
-                        keyboardState = keyboardState,
-                        viewKeyboard = viewKeyboard
+                        keyboardState = keyboardState
                     )
                 }
             } else {
@@ -126,26 +128,25 @@ fun KeyboardKey(
                 }
             }
         }
-
-
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun KeyboardIcon(
+    colorKey: String,
     context: Context,
     modifier: Modifier = Modifier,
     keyboardKey: String,
     drawable: Int,
     keyboardState: MutableState<KeyboardState>,
-    textColor: Color = Color.Black,
-    viewKeyboard: KeyboardViewModel
+    textColor: Color = Color.Black
 ) {
-    val colorKey by viewKeyboard.colorKeys.collectAsState()
+    val colorKeyNow by rememberUpdatedState(newValue = colorKey)
     val currentInputConnection = (context as IMEService).currentInputConnection
+
     Icon(modifier = modifier
-        .background(Color(android.graphics.Color.parseColor("#$colorKey")))
+        .background(Color(android.graphics.Color.parseColor("#$colorKeyNow")))
         .fillMaxWidth()
         .pointerInteropFilter {
             when (it.action) {
@@ -187,6 +188,7 @@ fun whenKeyClick(
                 )
             )
         }
+
         "emoji" -> {
             keyboardState.value = KeyboardState.EMOJI
         }

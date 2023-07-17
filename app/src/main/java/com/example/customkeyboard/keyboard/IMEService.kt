@@ -2,7 +2,6 @@ package com.example.customkeyboard.keyboard
 
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
