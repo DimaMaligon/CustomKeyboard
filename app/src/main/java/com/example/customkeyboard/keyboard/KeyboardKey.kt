@@ -51,6 +51,7 @@ fun KeyboardKey(
     modifier: Modifier,
     keyboardKey: String,
     keyboardState: MutableState<KeyboardState>,
+    languageState: MutableState<LanguageState>,
     viewKeyboard: KeyboardViewModel
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -72,6 +73,8 @@ fun KeyboardKey(
         "SHIFT" to R.drawable.shfit_double_caps,
         "delete" to R.drawable.baseline_backspace_24,
         "enter" to R.drawable.baseline_send,
+        "languageRu" to R.drawable.baseline_language_24,
+        "languageEn" to R.drawable.baseline_language_24,
         " " to R.drawable.spacebar_filled,
         "123" to R.drawable.baseline_123,
         "ABC" to R.drawable.baseline_abc,
@@ -92,7 +95,8 @@ fun KeyboardKey(
                         modifier = modifier,
                         keyboardKey = keyboardKey,
                         drawable = it,
-                        keyboardState = keyboardState
+                        keyboardState = keyboardState,
+                        languageState = languageState
                     )
                 }
             } else {
@@ -140,6 +144,7 @@ fun KeyboardIcon(
     keyboardKey: String,
     drawable: Int,
     keyboardState: MutableState<KeyboardState>,
+    languageState: MutableState<LanguageState>,
     textColor: Color = Color.Black
 ) {
     val colorKeyNow by rememberUpdatedState(newValue = colorKey)
@@ -154,6 +159,7 @@ fun KeyboardIcon(
                     motionEvent = it,
                     keyboardKey = keyboardKey,
                     keyboardState = keyboardState,
+                    languageState = languageState,
                     currentInputConnection = currentInputConnection
                 )
             }
@@ -173,6 +179,7 @@ fun whenKeyClick(
     motionEvent: MotionEvent,
     keyboardKey: String,
     keyboardState: MutableState<KeyboardState>,
+    languageState: MutableState<LanguageState>,
     currentInputConnection: InputConnection
 ) {
     when (keyboardKey) {
@@ -231,7 +238,12 @@ fun whenKeyClick(
         }
 
         "123" -> keyboardState.value = KeyboardState.NUMBER
+
         "ABC" -> keyboardState.value = KeyboardState.STRING
+
+        "languageRu" -> languageState.value = LanguageState.RU
+
+        "languageEn" -> languageState.value = LanguageState.EN
     }
 }
 
