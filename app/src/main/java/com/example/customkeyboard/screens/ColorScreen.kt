@@ -68,16 +68,18 @@ fun ColorScreen(navController: NavHostController, viewModelKeyboard: KeyboardVie
                     Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
                 }
             })
-    }, content = { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            TagsMenu(navController = navController)
-            MainElements(viewModelKeyboard)
-        }
-    })
+    },
+        bottomBar = { BottomBar(navHostController = navController) },
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
+                TagsMenu(navController = navController)
+                MainElements(viewModelKeyboard)
+            }
+        })
 }
 
 @Composable
