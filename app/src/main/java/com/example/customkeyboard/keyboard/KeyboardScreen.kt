@@ -77,56 +77,15 @@ fun KeyboardScreen(viewKeyboard: KeyboardViewModel, modifier: Modifier = Modifie
 @Composable
 fun KeyboardScreenAllLines(viewKeyboard: KeyboardViewModel, modifier: Modifier) {
     val colorBackGround by viewKeyboard.colorBackground.collectAsState()
-    val keyboardState = remember { mutableStateOf(KeyboardState.CAPS) }
+    val languageState = remember { mutableStateOf(LanguageState.RU) }
+    val keyboardState = remember { mutableStateOf(KeyboardState.NOCAPS) }
+    val keyboardTemplate = KeyboardTemplates()
 
-    val keysMatrix = when (keyboardState.value) {
-        KeyboardState.CAPS -> arrayOf(
-            arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0"),
-            arrayOf("Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"),
-            arrayOf("A", "S", "D", "F", "G", "H", "J", "K", "L"),
-            arrayOf("Shift", "Z", "X", "C", "V", "B", "N", "M", "delete"),
-            arrayOf("123", "emoji", ",", " ", ".", "enter")
-        )
-
-        KeyboardState.NOCAPS -> arrayOf(
-            arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0"),
-            arrayOf("q", "w", "e", "r", "t", "y", "u", "i", "o", "p"),
-            arrayOf("a", "s", "d", "f", "g", "h", "j", "k", "l"),
-            arrayOf("shift", "z", "x", "c", "v", "b", "n", "m", "delete"),
-            arrayOf("123", "emoji", ",", " ", ".", "enter")
-        )
-
-        KeyboardState.DOUBLECAPS -> arrayOf(
-            arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0"),
-            arrayOf("Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"),
-            arrayOf("A", "S", "D", "F", "G", "H", "J", "K", "L"),
-            arrayOf("SHIFT", "Z", "X", "C", "V", "B", "N", "M", "delete"),
-            arrayOf("123", "emoji", ",", " ", ".", "enter")
-        )
-
-        KeyboardState.NUMBER -> arrayOf(
-            arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0"),
-            arrayOf("@", "#", "$", "%", "&", "-", "+", "(", ")"),
-            arrayOf("=", "*", "\"", "'", ":", ";", "!", "?", "delete"),
-            arrayOf("ABC", ",", "_", " ", "/", ".", "enter")
-        )
-
-        KeyboardState.EMOJI -> arrayOf(
-            arrayOf("back", "😁", "😂", "😃", "😆", "😇", "😈", "😉", "😊", "😋", "😌", "😍", "😎"),
-            arrayOf("😓", "😔", "😖", "😘", "😚", "😜", "😝", "😞", "😠", "😡", "😢", "😣", "😤"),
-            arrayOf("😥", "😨", "😩", "😪", "😫", "😭", "😰", "😐", "😒", "😱", "😲", "😳", "😵"),
-            arrayOf("😶", "😷", "😸", "😹", "😺", "😻", "😼", "😽", "😾", "😿", "🙀", "🙅", "😏"),
-            arrayOf("🙇", "🙈", "🙉", "🙊", "🙋", "🙌", "🙍", "🙎", "✋", "✋", "🐲", "👀", "🐝"),
-        )
-
-        else -> arrayOf(
-            arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0"),
-            arrayOf("Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"),
-            arrayOf("A", "S", "D", "F", "G", "H", "J", "K", "L"),
-            arrayOf("Shift", "Z", "X", "C", "V", "B", "N", "M", "delete"),
-            arrayOf("123", "emoji", ",", " ", ".", "enter")
-        )
+    val keysMatrix = when (languageState.value) {
+        LanguageState.RU -> keyboardTemplate.getTempleKeyboardRus(keyboardState.value)
+        LanguageState.EN -> keyboardTemplate.getTempleKeyboardEn(keyboardState.value)
     }
+
     Column(
         modifier = Modifier
             .background(Color(android.graphics.Color.parseColor("#$colorBackGround")))
@@ -147,6 +106,7 @@ fun KeyboardScreenAllLines(viewKeyboard: KeyboardViewModel, modifier: Modifier) 
                             keyboardKey = key,
                             viewKeyboard = viewKeyboard,
                             keyboardState = keyboardState,
+                            languageState = languageState,
                             modifier = keyModifier
                         )
                     }
