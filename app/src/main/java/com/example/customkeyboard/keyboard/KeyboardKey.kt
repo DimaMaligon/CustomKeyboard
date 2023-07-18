@@ -122,11 +122,10 @@ fun KeyboardKey(
                 if (pressed.value) {
                     Text(
                         modifier = modifier
-                            .size(50.dp, 80.dp),
+                            .fillMaxSize(),
                         text = keyboardKey,
                         textAlign = TextAlign.Center,
-                        color = Color.Green,
-                        fontSize = 16.sp,
+                        fontSize = 17.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }

@@ -17,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.customkeyboard.R
@@ -38,7 +39,7 @@ fun HomeScreen(navController: NavHostController) {
     Scaffold(topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.mediumTopAppBarColors(
-              containerColor = MaterialTheme.colorScheme.secondaryContainer
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
             ),
             title = {
                 Text(
@@ -48,7 +49,7 @@ fun HomeScreen(navController: NavHostController) {
             }
         )
     },
-        bottomBar = { BottomBar(navHostController = navController)},
+        bottomBar = { BottomBar(navHostController = navController) },
         content = { padding ->
             Column(
                 modifier = Modifier
@@ -78,19 +79,31 @@ fun HomeOptions() {
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Button(modifier = Modifier.size(180.dp, 50.dp),
+            Button(
+                modifier = Modifier.size(180.dp, 60.dp),
                 onClick = {
                     context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS))
                 }) {
-                Text(text = stringResource(id = R.string.turn_on_keyboard))
+                Text(
+                    text = stringResource(id = R.string.turn_on_keyboard),
+                    textAlign = TextAlign.Center
+                )
             }
-            Button(modifier = Modifier.size(180.dp, 50.dp), onClick = {
+            Button(modifier = Modifier.size(180.dp, 60.dp), onClick = {
                 inputMethodManager.showInputMethodPicker()
             }) {
-                Text(text = stringResource(id = R.string.choose_keyboard))
+                Text(
+                    text = stringResource(id = R.string.choose_keyboard),
+                    textAlign = TextAlign.Center
+                )
             }
         }
-        Text(text = stringResource(id = R.string.title_try_it), Modifier.padding(top = 20.dp))
+        Text(
+            text = stringResource(id = R.string.title_try_it),
+            Modifier.padding(top = 20.dp),
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.titleMedium
+        )
         TextField(
             value = text, onValueChange = setValue,
             modifier = Modifier

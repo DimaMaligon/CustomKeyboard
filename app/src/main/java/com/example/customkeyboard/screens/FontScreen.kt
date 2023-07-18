@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -86,7 +87,14 @@ fun AllElements(viewModelKeyboard: KeyboardViewModel) {
     ) {
         FontList(viewModelKeyboard)
 
-        Text(text = stringResource(id = R.string.title_try_it), Modifier.padding(top = 20.dp))
+        Text(
+            text = stringResource(
+                id = R.string.title_try_it
+            ),
+            Modifier.padding(top = 20.dp),
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.titleMedium
+        )
         TextField(
             value = text,
             onValueChange = setValue,
@@ -109,7 +117,7 @@ fun FontList(viewModelKeyboard: KeyboardViewModel) {
         val scope = rememberCoroutineScope()
         val keyboardDataStore = KeyboardDataStore(context)
 
-        Column() {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = stringResource(id = R.string.second_title_font),
                 Modifier.padding(top = 10.dp),
@@ -133,21 +141,26 @@ fun FontList(viewModelKeyboard: KeyboardViewModel) {
                         .padding(vertical = 10.dp))
                 }
             }
-            Button(onClick = {
-                val intent = Intent(context, IMEService::class.java)
-                intent.putExtra("FontKey", fontState)
-                context.startService(intent)
+            Button(
+                onClick = {
+                    val intent = Intent(context, IMEService::class.java)
+                    intent.putExtra("FontKey", fontState)
+                    context.startService(intent)
 
-                scope.launch {
-                    keyboardDataStore.saveFontKey(
-                        FontKeyData(
-                            fontKey = fontState
+                    scope.launch {
+                        keyboardDataStore.saveFontKey(
+                            FontKeyData(
+                                fontKey = fontState
+                            )
                         )
-                    )
-                }
-            }) {
+                    }
+                },
+                Modifier.width(350.dp)
+            ) {
                 Text(
-                    stringResource(id = R.string.button_save)
+                    stringResource(id = R.string.button_save),
+                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -97,7 +98,12 @@ fun MainSizeKey(viewModelKeyboard: KeyboardViewModel) {
 
         ParametersKey(viewModelKeyboard)
 
-        Text(text = stringResource(id = R.string.title_try_it), Modifier.padding(top = 20.dp))
+        Text(
+            text = stringResource(id = R.string.title_try_it),
+            Modifier.padding(top = 20.dp),
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.titleMedium
+        )
         TextField(
             value = text,
             onValueChange = setValue,
@@ -244,30 +250,35 @@ fun SaveKeyObject(
     val scope = rememberCoroutineScope()
     val keyboardDataStore = KeyboardDataStore(context)
 
-    Button(onClick = {
-        val newLeft = left.text.toInt()
-        val newTop = top.text.toInt()
-        val newBottom = bottom.text.toInt()
-        val newRight = right.text.toInt()
-        val listKeySize = arrayListOf(newLeft, newTop, newBottom, newRight)
+    Button(
+        onClick = {
+            val newLeft = left.text.toInt()
+            val newTop = top.text.toInt()
+            val newBottom = bottom.text.toInt()
+            val newRight = right.text.toInt()
+            val listKeySize = arrayListOf(newLeft, newTop, newBottom, newRight)
 
-        val intent = Intent(context, IMEService::class.java)
-        intent.putExtra("SizeKey", listKeySize)
-        context.startService(intent)
+            val intent = Intent(context, IMEService::class.java)
+            intent.putExtra("SizeKey", listKeySize)
+            context.startService(intent)
 
-        scope.launch {
-            keyboardDataStore.saveSizeKey(
-                SizeKeyData(
-                    startPadding = newLeft,
-                    topPadding = newTop,
-                    endPadding = newRight,
-                    bottomPadding = newBottom
+            scope.launch {
+                keyboardDataStore.saveSizeKey(
+                    SizeKeyData(
+                        startPadding = newLeft,
+                        topPadding = newTop,
+                        endPadding = newRight,
+                        bottomPadding = newBottom
+                    )
                 )
-            )
-        }
-    }) {
+            }
+        },
+        Modifier.width(350.dp)
+    ) {
         Text(
-            stringResource(id = R.string.button_save)
+            stringResource(id = R.string.button_save),
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.titleMedium
         )
     }
 }
