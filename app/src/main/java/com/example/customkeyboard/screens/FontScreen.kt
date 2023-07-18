@@ -65,16 +65,18 @@ fun FontScreen(navController: NavHostController, viewModelKeyboard: KeyboardView
                 Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
             }
         })
-    }, content = { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            TagsMenu(navController = navController)
-            AllElements(viewModelKeyboard = viewModelKeyboard)
-        }
-    })
+    },
+        bottomBar = { BottomBar(navHostController = navController) },
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
+                TagsMenu(navController = navController)
+                AllElements(viewModelKeyboard = viewModelKeyboard)
+            }
+        })
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

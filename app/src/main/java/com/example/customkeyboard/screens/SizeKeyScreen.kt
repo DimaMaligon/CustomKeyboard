@@ -68,16 +68,18 @@ fun SizeKeyScreen(
                 Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
             }
         })
-    }, content = { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            TagsMenu(navController = navController)
-            MainSizeKey(viewModelKeyboard)
-        }
-    })
+    },
+        bottomBar = { BottomBar(navHostController = navController) },
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
+                TagsMenu(navController = navController)
+                MainSizeKey(viewModelKeyboard)
+            }
+        })
 }
 
 @Composable
