@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.App.Starting" parent="Theme.CustomKeyboard">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/baseline_keyboard_logo_24</item>
+        <item name="windowSplashScreenBackground">#1C2427</item>
+    </style>
+
+</resources>
