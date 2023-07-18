@@ -11,6 +11,7 @@ import com.example.customkeyboard.screens.ColorScreen
 import com.example.customkeyboard.screens.FontScreen
 import com.example.customkeyboard.screens.HomeScreen
 import com.example.customkeyboard.screens.SizeKeyScreen
+import com.example.customkeyboard.screens.SplashScreen
 import com.example.customkeyboard.screens.UserScreen
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
 
@@ -19,9 +20,15 @@ import com.example.customkeyboard.viewmodel.KeyboardViewModel
 fun NavGraph(navController: NavHostController, viewModelKeyboard: KeyboardViewModel) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Home.route
+        startDestination = Screens.Splash.route
     )
     {
+        composable(
+            route = Screens.Splash.route
+        ) {
+            SplashScreen(navController)
+        }
+
         composable(
             route = Screens.Home.route
         ) {

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -71,10 +73,16 @@ fun HomeOptions() {
 
     Column(
         Modifier
-            .padding(top = 120.dp)
+            .padding(top = 20.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Icon(
+            modifier = Modifier.size(150.dp, 150.dp),
+            painter = painterResource(id = R.drawable.baseline_keyboard_24),
+            contentDescription = "Logo Home",
+            tint = MaterialTheme.colorScheme.primary
+        )
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
