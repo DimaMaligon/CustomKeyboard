@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,12 +55,13 @@ import kotlinx.coroutines.launch
 fun SizeKeyScreen(
     navController: NavHostController, viewModelKeyboard: KeyboardViewModel
 ) {
+    var openDialog by remember { mutableStateOf(false) }
     Scaffold(topBar = {
         TopAppBar(colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ), title = {
             Text(
-                text = stringResource(id = R.string.screen_size), Modifier.padding(55.dp)
+                text = stringResource(id = R.string.screen_size), Modifier.padding(46.dp)
             )
         }, navigationIcon = {
             IconButton(onClick = {
@@ -67,7 +69,15 @@ fun SizeKeyScreen(
             }) {
                 Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
             }
-        })
+        },
+            actions = {
+                IconButton(onClick = {
+                    openDialog = !openDialog
+                }) {
+                    Icon(Icons.Filled.Info, "info icon")
+                }
+            }
+        )
     },
         bottomBar = { BottomBar(navHostController = navController) },
         content = { padding ->
@@ -77,6 +87,18 @@ fun SizeKeyScreen(
                     .fillMaxSize()
             ) {
                 TagsMenu(navController = navController)
+
+                Row(
+                    Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    PopupWindowDialog(
+                        openDialog = openDialog,
+                        stringResource(id = R.string.text_color_info)
+                    )
+                }
+
                 MainSizeKey(viewModelKeyboard)
             }
         })

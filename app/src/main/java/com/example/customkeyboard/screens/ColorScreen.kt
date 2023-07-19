@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +52,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColorScreen(navController: NavHostController, viewModelKeyboard: KeyboardViewModel) {
+    var openDialog by remember { mutableStateOf(false) }
     Scaffold(topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -67,7 +69,15 @@ fun ColorScreen(navController: NavHostController, viewModelKeyboard: KeyboardVie
                 }) {
                     Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.back_icon))
                 }
-            })
+            },
+            actions = {
+                IconButton(onClick = {
+                    openDialog = !openDialog
+                }) {
+                    Icon(Icons.Filled.Info, "info icon")
+                }
+            }
+        )
     },
         bottomBar = { BottomBar(navHostController = navController) },
         content = { padding ->
@@ -77,6 +87,16 @@ fun ColorScreen(navController: NavHostController, viewModelKeyboard: KeyboardVie
                     .fillMaxSize()
             ) {
                 TagsMenu(navController = navController)
+                Row(
+                    Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    PopupWindowDialog(
+                        openDialog = openDialog,
+                        stringResource(id = R.string.text_color_info)
+                    )
+                }
                 MainElements(viewModelKeyboard)
             }
         })
