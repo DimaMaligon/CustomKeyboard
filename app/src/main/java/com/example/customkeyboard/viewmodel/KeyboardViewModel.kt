@@ -12,7 +12,7 @@ class KeyboardViewModel: ViewModel() {
     val fontKey: StateFlow<String> = fontKeyMutable
     private val colorKeysMutable = MutableStateFlow("ffffff")
     val colorKeys: StateFlow<String> = colorKeysMutable
-    private val colorBackgroundMutable = MutableStateFlow("ffffff")
+    private val colorBackgroundMutable = MutableStateFlow("FF8F9099")
     val colorBackground: StateFlow<String> = colorBackgroundMutable
     private val keySizeMutable = MutableStateFlow(KeySize(0, 0, 0, 0))
     val keySize: StateFlow<KeySize> = keySizeMutable
