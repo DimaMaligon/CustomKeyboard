@@ -17,7 +17,7 @@
         <service
             android:name=".keyboard.IMEService"
             android:configChanges="uiMode"
-            android:label="Example Comopose IME"
+            android:label="Custom Keyboard IME"
             android:permission="android.permission.BIND_INPUT_METHOD"
             android:exported="true">
             <intent-filter>
