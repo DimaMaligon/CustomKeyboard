@@ -32,7 +32,7 @@
 чтобы использовать ее дальше.
 
 <p  align="center">
-<code><img width="30%" title="Hilt" src="readme_files/screens_app/main_turn_on_keyboard.png"></code>
+<code><img width="30%" title="Hilt" src="readme_files/screens_app/main_turn_on.png"></code>
 </p>
 
 Для того, чтобы выбрать клавиатуру, которую мы хотим настроить под себя
