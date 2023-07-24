@@ -1,9 +1,7 @@
 package com.example.customkeyboard.keyboard
 
 import android.content.Intent
-import android.os.Build
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -49,7 +47,6 @@ class IMEService : LifecycleInputMethodService(),
         savedStateRegistryController.performRestore(null)
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.getStringExtra("FontKey")?.let {
             viewModelKeyboard.setFontKey(it)
@@ -60,7 +57,7 @@ class IMEService : LifecycleInputMethodService(),
         intent?.getStringExtra("ColorBackground")?.let {
             viewModelKeyboard.setColorBackground(it)
         }
-        intent?.getSerializableExtra("SizeKey", ArrayList::class.java)?.let {
+        intent?.getStringArrayExtra("SizeKey")?.let {
             viewModelKeyboard.setKeySize(
                 KeySize(
                     it[0] as Int,
