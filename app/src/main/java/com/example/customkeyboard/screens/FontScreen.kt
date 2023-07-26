@@ -82,7 +82,7 @@ fun FontScreen(navController: NavHostController, viewModelKeyboard: KeyboardView
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AllElements(viewModelKeyboard: KeyboardViewModel) {
-    val (text, setValue) = remember { mutableStateOf(TextFieldValue("Try here")) }
+    val (text, setValue) = remember { mutableStateOf(TextFieldValue("Напечатай тут")) }
 
     Column(
         Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
