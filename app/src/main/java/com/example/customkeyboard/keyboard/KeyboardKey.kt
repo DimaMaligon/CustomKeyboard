@@ -40,10 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.customkeyboard.R
 import com.example.customkeyboard.data.Fonts
 import com.example.customkeyboard.viewmodel.KeyboardViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+
 
 @SuppressLint("ProduceStateDoesNotAssignValue")
 @Composable
@@ -216,16 +213,8 @@ fun whenKeyClick(
         }
 
         "delete" -> {
-            CoroutineScope(Dispatchers.IO).launch {
-                while (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                    delay(100)
-                    currentInputConnection.sendKeyEvent(
-                        KeyEvent(
-                            KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL
-                        )
-                    )
-                }
-            }
+            currentInputConnection.deleteSurroundingText(1, 0)
+            currentInputConnection.commitText(keyboardKey, keyboardKey.length)
         }
 
         "enter" -> {
