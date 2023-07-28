@@ -2,9 +2,9 @@ package com.example.customkeyboard.keyboard
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.inputmethod.InputConnection
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -88,12 +88,12 @@ fun KeyboardKey(
                 iconMap[keyboardKey]?.let {
                     KeyboardIcon(
                         colorKey = colorKey,
-                        context = context,
                         modifier = modifier,
                         keyboardKey = keyboardKey,
                         drawable = it,
                         keyboardState = keyboardState,
-                        languageState = languageState
+                        languageState = languageState,
+                        viewKeyboard = viewKeyboard
                     )
                 }
             } else {
@@ -135,49 +135,54 @@ fun KeyboardKey(
 @Composable
 fun KeyboardIcon(
     colorKey: String,
-    context: Context,
     modifier: Modifier = Modifier,
     keyboardKey: String,
     drawable: Int,
     keyboardState: MutableState<KeyboardState>,
     languageState: MutableState<LanguageState>,
-    textColor: Color = Color.Black
+    textColor: Color = Color.Black,
+    viewKeyboard: KeyboardViewModel
 ) {
     val colorKeyNow by rememberUpdatedState(newValue = colorKey)
-    val currentInputConnection = (context as IMEService).currentInputConnection
+    val keyPressed by viewKeyboard.keyPressed.collectAsState()
+    val context = LocalContext.current
+    Log.d("keypress", "$keyPressed")
 
-    Icon(modifier = modifier
-        .background(Color(android.graphics.Color.parseColor("#$colorKeyNow")))
-        .fillMaxWidth()
-        .pointerInteropFilter {
-            when (it.action) {
-                MotionEvent.ACTION_DOWN -> whenKeyClick(
-                    motionEvent = it,
-                    keyboardKey = keyboardKey,
-                    keyboardState = keyboardState,
-                    languageState = languageState,
-                    currentInputConnection = currentInputConnection
-                )
+    Icon(
+        modifier = modifier
+            .background(Color(android.graphics.Color.parseColor("#$colorKeyNow")))
+            .fillMaxWidth()
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        KeyClick(
+                            keyboardKey = keyboardKey,
+                            keyboardState = keyboardState,
+                            languageState = languageState,
+                            context = context
+                        )
+                        Log.d("keypress1", "$keyPressed")
+                    }
+                }
+                true
             }
-            true
-        }
-        .padding(2.dp)
-        .padding(
-            top = 14.dp, bottom = 14.dp
-        ),
+            .padding(2.dp)
+            .padding(
+                top = 14.dp, bottom = 14.dp
+            ),
         painter = painterResource(id = drawable),
         contentDescription = stringResource(R.string.key_icon),
         tint = textColor)
 }
 
-
-fun whenKeyClick(
-    motionEvent: MotionEvent,
+fun KeyClick(
     keyboardKey: String,
     keyboardState: MutableState<KeyboardState>,
     languageState: MutableState<LanguageState>,
-    currentInputConnection: InputConnection
+    context: Context
 ) {
+    val currentInputConnection = (context as IMEService).currentInputConnection
+
     when (keyboardKey) {
         " " -> {
             currentInputConnection.sendKeyEvent(
@@ -192,12 +197,12 @@ fun whenKeyClick(
             )
         }
 
-        "emoji" -> {
-            keyboardState.value = KeyboardState.EMOJI
-        }
-
         "Shift" -> {
             keyboardState.value = KeyboardState.DOUBLECAPS
+        }
+
+        "emoji" -> {
+            keyboardState.value = KeyboardState.EMOJI
         }
 
         "SHIFT" -> {
@@ -214,7 +219,6 @@ fun whenKeyClick(
 
         "delete" -> {
             currentInputConnection.deleteSurroundingText(1, 0)
-            currentInputConnection.commitText(keyboardKey, keyboardKey.length)
         }
 
         "enter" -> {

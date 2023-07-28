@@ -18,6 +18,8 @@ class KeyboardViewModel: ViewModel() {
     val keySize: StateFlow<KeySize> = keySizeMutable
     private val showProgressMutable = MutableStateFlow(true)
     val showProgress: StateFlow<Boolean> = showProgressMutable
+    private val keyPressedMutable = MutableStateFlow(false)
+    val keyPressed: StateFlow<Boolean> = keyPressedMutable
 
     fun setFontKey(font: String?) {
         fontKeyMutable.value = font.toString()
@@ -43,5 +45,13 @@ class KeyboardViewModel: ViewModel() {
 
     fun onShowProgress() {
         showProgressMutable.value = true
+    }
+
+    fun onPressedKey() {
+        keyPressedMutable.value = true
+    }
+
+    fun onUnpressedKey() {
+        keyPressedMutable.value = false
     }
 }
